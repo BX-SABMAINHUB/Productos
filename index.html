@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mi Tienda</title>
+    <!-- Import map para Firebase modular -->
+    <script type="importmap">
+        {
+            "imports": {
+                "firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
+                "firebase/database": "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js"
+            }
+        }
+    </script>
+    <style>
+        /* Reset y estilos generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        #app {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Dashboard grid */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: #e9edf2;
+        }
+
+        .product-card .title {
+            padding: 14px 16px 16px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #1e293b;
+            text-align: center;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Modal de detalle */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            max-width: 500px;
+            width: 100%;
+            padding: 32px 28px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            animation: fadeIn 0.25s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-content .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            font-size: 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #94a3b8;
+            transition: color 0.2s;
+        }
+
+        .modal-content .close-btn:hover {
+            color: #1e293b;
+        }
+
+        .modal-content h2 {
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+            color: #0f172a;
+        }
+
+        .modal-content .detail-image {
+            width: 100%;
+            max-height: 220px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin: 12px 0 16px;
+            background: #e9edf2;
+        }
+
+        .modal-content .price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 8px 0;
+        }
+
+        .modal-content .payment-methods {
+            background: #f1f5f9;
+            padding: 10px 14px;
+            border-radius: 10px;
+            margin: 12px 0;
+            font-size: 0.95rem;
+            color: #1e293b;
+        }
+
+        .modal-content .description {
+            color: #334155;
+            line-height: 1.5;
+            margin: 12px 0 20px;
+        }
+
+        .btn-comprar {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-comprar:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-comprar:active {
+            transform: scale(0.97);
+        }
+
+        .btn-comprar .spinner {
+            display: none;
+            width: 22px;
+            height: 22px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .btn-comprar.loading .spinner {
+            display: inline-block;
+        }
+
+        .btn-comprar.loading .btn-text {
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Overlay de compra (iframe + mensaje) */
+        .compra-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
+        }
+
+        .compra-overlay.active {
+            display: flex;
+        }
+
+        .compra-overlay iframe {
+            flex: 1;
+            width: 100%;
+            border: none;
+        }
+
+        .compra-overlay .footer-msg {
+            background: #0f172a;
+            color: #facc15;
+            text-align: center;
+            padding: 14px 20px;
+            font-weight: 500;
+            font-size: 1rem;
+            border-top: 2px solid #facc15;
+        }
+
+        .compra-overlay .close-compra {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: none;
+            border-radius: 40px;
+            padding: 8px 18px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            z-index: 10;
+            backdrop-filter: blur(4px);
+        }
+
+        .compra-overlay .close-compra:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        /* Botón administrador (x) */
+        .admin-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #0f172a;
+            color: white;
+            border: none;
+            font-size: 26px;
+            font-weight: 300;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s, background 0.2s;
+            z-index: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .admin-btn:hover {
+            background: #1e293b;
+            transform: scale(1.05);
+        }
+
+        /* Panel administrador (formulario) */
+        .admin-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 32px 28px;
+            border-radius: 24px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            z-index: 3000;
+            width: 90%;
+            max-width: 500px;
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .admin-panel.active {
+            display: block;
+        }
+
+        .admin-panel h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #0f172a;
+        }
+
+        .admin-panel label {
+            display: block;
+            font-weight: 500;
+            margin: 12px 0 4px;
+            color: #1e293b;
+            font-size: 0.95rem;
+        }
+
+        .admin-panel input,
+        .admin-panel textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border 0.2s;
+        }
+
+        .admin-panel input:focus,
+        .admin-panel textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .admin-panel textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        .admin-panel .btn-submit {
+            margin-top: 20px;
+            background: #0f172a;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .admin-panel .btn-submit:hover {
+            background: #1e293b;
+        }
+
+        .admin-panel .btn-cancel {
+            margin-top: 10px;
+            background: transparent;
+            color: #64748b;
+            border: 1px solid #cbd5e1;
+            padding: 12px;
+            border-radius: 40px;
+            font-size: 0.95rem;
+            width: 100%;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .admin-panel .btn-cancel:hover {
+            background: #f1f5f9;
+        }
+
+        /* Loading general */
+        .loading-placeholder {
+            text-align: center;
+            padding: 60px 20px;
+            color: #94a3b8;
+            font-size: 1.2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .modal-content {
+                padding: 24px 16px;
+            }
+            .admin-panel {
+                padding: 24px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- App principal -->
+    <div id="app">
+        <h1 style="font-size: 2rem; color: #0f172a; margin-bottom: 4px;">🛍️ Mi Tienda</h1>
+        <p style="color: #64748b; margin-bottom: 20px;">Haz clic en un producto para ver los detalles</p>
+
+        <div id="dashboard" class="dashboard">
+            <!-- Productos se cargarán aquí -->
+            <div class="loading-placeholder">Cargando productos...</div>
+        </div>
+    </div>
+
+    <!-- Botón administrador (x) -->
+    <button class="admin-btn" id="adminBtn" title="Administrar productos">✕</button>
+
+    <!-- Modal de detalle de producto -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeDetail">✕</button>
+            <h2 id="detailTitle">Título</h2>
+            <img class="detail-image" id="detailImage" src="" alt="producto" />
+            <div class="price" id="detailPrice">$0.00</div>
+            <div class="payment-methods" id="detailPayment"><strong>Métodos de pago:</strong> Efectivo, tarjeta</div>
+            <div class="description" id="detailDesc">Descripción del producto.</div>
+            <button class="btn-comprar" id="comprarBtn">
+                <span class="btn-text">Comprar ahora</span>
+                <span class="spinner"></span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Overlay de compra (iframe + mensaje) -->
+    <div class="compra-overlay" id="compraOverlay">
+        <button class="close-compra" id="closeCompra">✕ Cerrar</button>
+        <iframe id="compraIframe" src="about:blank"></iframe>
+        <div class="footer-msg">⚠️ Si no pones la cantidad correcta, no te daremos el producto.</div>
+    </div>
+
+    <!-- Panel de administración -->
+    <div class="admin-panel" id="adminPanel">
+        <h3>➕ Publicar nuevo producto</h3>
+        <label for="prodTitle">Título *</label>
+        <input type="text" id="prodTitle" placeholder="Ej. Zapatos deportivos" />
+
+        <label for="prodImage">URL de la imagen *</label>
+        <input type="url" id="prodImage" placeholder="https://ejemplo.com/imagen.jpg" />
+
+        <label for="prodPrice">Precio *</label>
+        <input type="text" id="prodPrice" placeholder="$99.99" />
+
+        <label for="prodPayment">Métodos de pago *</label>
+        <input type="text" id="prodPayment" placeholder="Efectivo, tarjeta, transferencia" />
+
+        <label for="prodDesc">Descripción *</label>
+        <textarea id="prodDesc" placeholder="Describe el producto..."></textarea>
+
+        <button class="btn-submit" id="submitProduct">Publicar producto</button>
+        <button class="btn-cancel" id="cancelAdmin">Cancelar</button>
+    </div>
+
+    <!-- Script principal con Firebase -->
+    <script type="module">
+        import { initializeApp } from "firebase/app";
+        import { getDatabase, ref, onValue, push, set } from "firebase/database";
+
+        // Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyD13N4-9MjTrmlPwGP7mves0Exje4v2ACw",
+            authDomain: "kahoot-8529e.firebaseapp.com",
+            databaseURL: "https://kahoot-8529e-default-rtdb.firebaseio.com",
+            projectId: "kahoot-8529e",
+            storageBucket: "kahoot-8529e.firebasestorage.app",
+            messagingSenderId: "313414356056",
+            appId: "1:313414356056:web:4aab4587f7df9393008e2d",
+            measurementId: "G-8T4CPC1BQ3"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const productosRef = ref(db, 'productos');
+
+        // Elementos del DOM
+        const dashboard = document.getElementById('dashboard');
+        const detailModal = document.getElementById('detailModal');
+        const closeDetail = document.getElementById('closeDetail');
+        const detailTitle = document.getElementById('detailTitle');
+        const detailImage = document.getElementById('detailImage');
+        const detailPrice = document.getElementById('detailPrice');
+        const detailPayment = document.getElementById('detailPayment');
+        const detailDesc = document.getElementById('detailDesc');
+        const comprarBtn = document.getElementById('comprarBtn');
+
+        const compraOverlay = document.getElementById('compraOverlay');
+        const compraIframe = document.getElementById('compraIframe');
+        const closeCompra = document.getElementById('closeCompra');
+
+        const adminBtn = document.getElementById('adminBtn');
+        const adminPanel = document.getElementById('adminPanel');
+        const cancelAdmin = document.getElementById('cancelAdmin');
+        const submitProduct = document.getElementById('submitProduct');
+
+        // Campos del formulario
+        const prodTitle = document.getElementById('prodTitle');
+        const prodImage = document.getElementById('prodImage');
+        const prodPrice = document.getElementById('prodPrice');
+        const prodPayment = document.getElementById('prodPayment');
+        const prodDesc = document.getElementById('prodDesc');
+
+        // Estado
+        let productos = [];
+        let selectedProductId = null;
+
+        // --- Cargar productos desde Firebase ---
+        function cargarProductos() {
+            onValue(productosRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    productos = Object.entries(data).map(([id, prod]) => ({ id, ...prod }));
+                } else {
+                    productos = [];
+                }
+                renderDashboard();
+            });
+        }
+
+        // --- Renderizar dashboard ---
+        function renderDashboard() {
+            if (productos.length === 0) {
+                dashboard.innerHTML = `<div class="loading-placeholder">No hay productos disponibles.</div>`;
+                return;
+            }
+
+            dashboard.innerHTML = productos.map(prod => `
+                <div class="product-card" data-id="${prod.id}">
+                    <img src="${prod.imagen || 'https://via.placeholder.com/300x180?text=Sin+imagen'}" alt="${prod.titulo}" />
+                    <div class="title">${prod.titulo}</div>
+                </div>
+            `).join('');
+
+            // Event listeners a las tarjetas
+            document.querySelectorAll('.product-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const id = card.dataset.id;
+                    const prod = productos.find(p => p.id === id);
+                    if (prod) abrirDetalle(prod);
+                });
+            });
+        }
+
+        // --- Abrir detalle del producto ---
+        function abrirDetalle(prod) {
+            selectedProductId = prod.id;
+            detailTitle.textContent = prod.titulo;
+            detailImage.src = prod.imagen || 'https://via.placeholder.com/500x220?text=Sin+imagen';
+            detailImage.alt = prod.titulo;
+            detailPrice.textContent = prod.precio || 'Precio no especificado';
+            detailPayment.innerHTML = `<strong>Métodos de pago:</strong> ${prod.metodosPago || 'No especificados'}`;
+            detailDesc.textContent = prod.descripcion || 'Sin descripción.';
+
+            // Resetear botón de compra
+            comprarBtn.classList.remove('loading');
+            comprarBtn.querySelector('.btn-text').textContent = 'Comprar ahora';
+
+            detailModal.classList.add('active');
+        }
+
+        // --- Cerrar detalle ---
+        function cerrarDetalle() {
+            detailModal.classList.remove('active');
+            // Si estaba cargando, cancelar
+            comprarBtn.classList.remove('loading');
+        }
+
+        closeDetail.addEventListener('click', cerrarDetalle);
+        detailModal.addEventListener('click', (e) => {
+            if (e.target === detailModal) cerrarDetalle();
+        });
+
+        // --- Comprar ahora ---
+        comprarBtn.addEventListener('click', () => {
+            // Evitar múltiples clics
+            if (comprarBtn.classList.contains('loading')) return;
+
+            const btnText = comprarBtn.querySelector('.btn-text');
+            const spinner = comprarBtn.querySelector('.spinner');
+            comprarBtn.classList.add('loading');
+            btnText.textContent = 'Pensando...';
+
+            // Simular 5 segundos de espera
+            setTimeout(() => {
+                // Ocultar modal de detalle
+                cerrarDetalle();
+                // Mostrar overlay de compra con iframe
+                compraIframe.src = 'https://ibuyproducts.vercel.app';
+                compraOverlay.classList.add('active');
+                // Resetear botón
+                comprarBtn.classList.remove('loading');
+                btnText.textContent = 'Comprar ahora';
+            }, 5000);
+        });
+
+        // --- Cerrar overlay de compra ---
+        closeCompra.addEventListener('click', () => {
+            compraOverlay.classList.remove('active');
+            compraIframe.src = 'about:blank';
+        });
+
+        // --- Administrador: botón "x" ---
+        adminBtn.addEventListener('click', () => {
+            const password = prompt('🔐 Ingresa la contraseña de administrador:');
+            if (password === 'Owner') {
+                adminPanel.classList.add('active');
+                // Limpiar campos
+                prodTitle.value = '';
+                prodImage.value = '';
+                prodPrice.value = '';
+                prodPayment.value = '';
+                prodDesc.value = '';
+            } else if (password !== null) {
+                alert('Contraseña incorrecta.');
+            }
+        });
+
+        // --- Cancelar administración ---
+        cancelAdmin.addEventListener('click', () => {
+            adminPanel.classList.remove('active');
+        });
+
+        // --- Publicar producto ---
+        submitProduct.addEventListener('click', async () => {
+            const titulo = prodTitle.value.trim();
+            const imagen = prodImage.value.trim();
+            const precio = prodPrice.value.trim();
+            const metodosPago = prodPayment.value.trim();
+            const descripcion = prodDesc.value.trim();
+
+            if (!titulo || !imagen || !precio || !metodosPago || !descripcion) {
+                alert('Todos los campos son obligatorios.');
+                return;
+            }
+
+            // Validar URL de imagen (básico)
+            try {
+                new URL(imagen);
+            } catch (_) {
+                alert('La URL de la imagen no es válida.');
+                return;
+            }
+
+            const nuevoProducto = {
+                titulo,
+                imagen,
+                precio,
+                metodosPago,
+                descripcion
+            };
+
+            try {
+                // Guardar en Firebase con push para generar ID único
+                await push(productosRef, nuevoProducto);
+                alert('✅ Producto publicado correctamente.');
+                adminPanel.classList.remove('active');
+                // Los datos se actualizarán automáticamente gracias a onValue
+            } catch (error) {
+                console.error(error);
+                alert('Error al publicar el producto. Revisa la consola.');
+            }
+        });
+
+        // --- Iniciar ---
+        cargarProductos();
+    </script>
+</body>
+</html>
