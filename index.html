@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mi Tienda</title>
-    <!-- Import map Firebase -->
+    <title>Tienda Elegante</title>
     <script type="importmap">
         {
             "imports": {
@@ -15,20 +14,20 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', system-ui, sans-serif;
         }
 
         body {
-            background: #f8fafc;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: #f6f9fc;
             min-height: 100vh;
-            padding: 24px;
-            color: #0f172a;
+            padding: 30px 20px;
+            color: #0b1a33;
         }
 
         #app {
@@ -36,97 +35,138 @@
             margin: 0 auto;
         }
 
+        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 28px;
+            align-items: flex-end;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 16px;
         }
 
         .header h1 {
-            font-size: 2.2rem;
-            font-weight: 600;
-            letter-spacing: -0.02em;
-            background: linear-gradient(145deg, #0f172a, #334155);
+            font-size: 2.6rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #0b1a33, #2c3e6b);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header h1 span {
+            background: #eef2f7;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #2c3e6b;
+            -webkit-text-fill-color: #2c3e6b;
+            letter-spacing: 0.3px;
         }
 
         .header .sub {
-            font-size: 0.95rem;
-            color: #64748b;
+            color: #5b6f8c;
+            font-weight: 500;
+            font-size: 1rem;
+            margin-top: 4px;
         }
 
-        /* Dashboard */
+        /* Dashboard grid */
         .dashboard {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 28px;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 30px;
         }
 
         .product-card {
             background: #ffffff;
-            border-radius: 20px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 0, 0, 0.02);
+            border-radius: 24px;
             overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 20, 40, 0.04), 0 2px 6px rgba(0, 0, 0, 0.02);
             cursor: pointer;
-            transition: transform 0.25s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            border: 1px solid rgba(226, 232, 240, 0.6);
+            transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.4s ease;
+            border: 1px solid rgba(226, 232, 240, 0.5);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.5s ease forwards;
+        }
+
+        .product-card:nth-child(1) { animation-delay: 0.05s; }
+        .product-card:nth-child(2) { animation-delay: 0.10s; }
+        .product-card:nth-child(3) { animation-delay: 0.15s; }
+        .product-card:nth-child(4) { animation-delay: 0.20s; }
+        .product-card:nth-child(5) { animation-delay: 0.25s; }
+        .product-card:nth-child(6) { animation-delay: 0.30s; }
+        .product-card:nth-child(7) { animation-delay: 0.35s; }
+        .product-card:nth-child(8) { animation-delay: 0.40s; }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .product-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 20, 40, 0.12);
             border-color: #cbd5e1;
         }
 
         .product-card .img-wrap {
-            height: 200px;
-            background: #f1f5f9;
+            height: 220px;
+            background: #f0f4fa;
             overflow: hidden;
+            position: relative;
         }
 
         .product-card .img-wrap img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.4s ease;
+            transition: transform 0.5s ease;
         }
 
         .product-card:hover .img-wrap img {
-            transform: scale(1.03);
+            transform: scale(1.04);
         }
 
         .product-card .title {
-            padding: 18px 16px 20px;
-            font-weight: 500;
+            padding: 20px 16px 22px;
+            font-weight: 600;
             font-size: 1.05rem;
             text-align: center;
-            color: #1e293b;
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            color: #0b1a33;
             line-height: 1.4;
+            letter-spacing: -0.01em;
         }
 
         /* Modal detalle */
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(15, 23, 42, 0.5);
-            backdrop-filter: blur(6px);
+            background: rgba(11, 26, 51, 0.6);
+            backdrop-filter: blur(8px);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 1000;
             padding: 20px;
+            animation: fadeIn 0.3s ease;
         }
 
         .modal-overlay.active {
             display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .modal-content {
@@ -137,73 +177,89 @@
             padding: 36px 32px 32px;
             box-shadow: 0 40px 80px rgba(0, 0, 0, 0.25);
             position: relative;
-            animation: fadeScale 0.3s ease;
+            animation: slideUp 0.35s cubic-bezier(0.2, 0, 0, 1);
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
-        @keyframes fadeScale {
+        @keyframes slideUp {
             from {
                 opacity: 0;
-                transform: scale(0.94);
+                transform: scale(0.96) translateY(20px);
             }
             to {
                 opacity: 1;
-                transform: scale(1);
+                transform: scale(1) translateY(0);
             }
         }
 
         .modal-content .close-btn {
             position: absolute;
-            top: 16px;
-            right: 20px;
-            font-size: 26px;
+            top: 18px;
+            right: 22px;
+            font-size: 28px;
             background: none;
             border: none;
             cursor: pointer;
             color: #94a3b8;
-            transition: color 0.2s;
+            transition: color 0.2s, transform 0.2s;
             line-height: 1;
         }
 
         .modal-content .close-btn:hover {
-            color: #0f172a;
+            color: #0b1a33;
+            transform: rotate(90deg);
         }
 
         .modal-content h2 {
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-            color: #0f172a;
+            font-size: 1.9rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #0b1a33;
+            letter-spacing: -0.02em;
         }
 
         .modal-content .detail-image {
             width: 100%;
-            max-height: 240px;
+            max-height: 260px;
             object-fit: cover;
-            border-radius: 16px;
+            border-radius: 18px;
             margin: 16px 0 20px;
-            background: #f1f5f9;
+            background: #f0f4fa;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
 
         .modal-content .price {
-            font-size: 2rem;
+            font-size: 2.1rem;
             font-weight: 700;
-            color: #0f172a;
-            margin: 6px 0 10px;
+            color: #0b1a33;
+            margin: 4px 0 8px;
+            letter-spacing: -0.02em;
         }
 
         .modal-content .payment-methods {
-            background: #f1f5f9;
-            padding: 10px 16px;
-            border-radius: 12px;
+            background: #f0f5fc;
+            padding: 12px 16px;
+            border-radius: 14px;
             margin: 10px 0 14px;
             font-size: 0.95rem;
-            color: #1e293b;
+            color: #1a2f4f;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .modal-content .payment-methods strong {
+            font-weight: 600;
+            color: #0b1a33;
         }
 
         .modal-content .description {
-            color: #334155;
+            color: #2d405c;
             line-height: 1.6;
-            margin: 10px 0 24px;
+            margin: 12px 0 24px;
+            font-size: 0.98rem;
         }
 
         .modal-actions {
@@ -213,24 +269,26 @@
         }
 
         .btn-comprar {
-            background: #2563eb;
+            background: #1e3a6b;
             color: white;
             border: none;
             padding: 16px 28px;
-            border-radius: 40px;
+            border-radius: 60px;
             font-size: 1.1rem;
             font-weight: 600;
             width: 100%;
             cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
+            transition: background 0.25s, transform 0.15s, box-shadow 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
+            letter-spacing: 0.3px;
         }
 
         .btn-comprar:hover {
-            background: #1d4ed8;
+            background: #14315a;
+            box-shadow: 0 8px 24px rgba(30, 58, 107, 0.25);
         }
 
         .btn-comprar:active {
@@ -241,7 +299,7 @@
             display: none;
             width: 22px;
             height: 22px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
+            border: 3px solid rgba(255,255,255,0.25);
             border-top-color: white;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
@@ -250,51 +308,50 @@
         .btn-comprar.loading .spinner {
             display: inline-block;
         }
-
         .btn-comprar.loading .btn-text {
             display: none;
         }
 
         @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
+            to { transform: rotate(360deg); }
         }
 
         .btn-eliminar {
-            background: #ef4444;
+            background: #e74c5e;
             color: white;
             border: none;
-            padding: 12px 20px;
-            border-radius: 40px;
+            padding: 14px 20px;
+            border-radius: 60px;
             font-size: 0.95rem;
             font-weight: 500;
             width: 100%;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.25s, transform 0.15s;
             display: none;
-            /* solo visible para Owner */
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .btn-eliminar:hover {
-            background: #dc2626;
+            background: #c03947;
         }
-
         .btn-eliminar.visible {
-            display: block;
+            display: flex;
         }
 
-        /* Overlay compra (iframe + cabecera) */
+        /* Overlay compra */
         .compra-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(12px);
             z-index: 2000;
             display: none;
             align-items: center;
             justify-content: center;
             padding: 30px;
+            animation: fadeIn 0.3s ease;
         }
 
         .compra-overlay.active {
@@ -305,22 +362,22 @@
             background: white;
             border-radius: 32px;
             width: 100%;
-            max-width: 900px;
+            max-width: 920px;
             height: 85vh;
-            max-height: 700px;
+            max-height: 720px;
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4);
-            animation: fadeScale 0.3s ease;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.3);
+            animation: slideUp 0.35s cubic-bezier(0.2,0,0,1);
         }
 
         .compra-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 16px 24px;
-            background: #0f172a;
+            padding: 16px 28px;
+            background: #0b1a33;
             color: white;
             flex-shrink: 0;
         }
@@ -328,40 +385,41 @@
         .compra-header .brand {
             font-weight: 600;
             font-size: 1.2rem;
-            letter-spacing: -0.01em;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
         }
 
-        .compra-header .brand span {
-            background: #facc15;
-            color: #0f172a;
-            padding: 2px 12px;
+        .compra-header .brand .badge {
+            background: #f7c948;
+            color: #0b1a33;
+            padding: 2px 14px;
             border-radius: 40px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
         .compra-header .close-compra {
-            background: rgba(255, 255, 255, 0.15);
-            border: none;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.08);
             color: white;
             border-radius: 40px;
-            padding: 6px 18px;
+            padding: 8px 20px;
             font-size: 0.9rem;
             cursor: pointer;
             transition: background 0.2s;
+            font-weight: 500;
         }
 
         .compra-header .close-compra:hover {
-            background: rgba(255, 255, 255, 0.25);
+            background: rgba(255,255,255,0.2);
         }
 
         .compra-body {
             flex: 1;
+            background: #f0f4fa;
             position: relative;
-            background: #f1f5f9;
         }
 
         .compra-body iframe {
@@ -372,95 +430,145 @@
 
         .compra-footer {
             background: #f8fafc;
-            padding: 12px 24px;
+            padding: 14px 28px;
             text-align: center;
             font-weight: 500;
-            color: #b45309;
-            border-top: 2px solid #facc15;
+            color: #a65c2a;
+            border-top: 2px solid #f7c948;
             flex-shrink: 0;
             font-size: 0.95rem;
+            letter-spacing: 0.2px;
         }
 
-        /* Admin button (x) */
+        /* Botón admin (x) */
         .admin-btn {
             position: fixed;
-            bottom: 28px;
-            right: 28px;
-            width: 56px;
-            height: 56px;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            background: #0f172a;
+            background: #0b1a33;
             color: white;
             border: none;
-            font-size: 28px;
+            font-size: 30px;
             font-weight: 300;
             cursor: pointer;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s, background 0.2s;
+            box-shadow: 0 8px 28px rgba(11, 26, 51, 0.3);
+            transition: transform 0.25s, background 0.25s, box-shadow 0.3s;
             z-index: 500;
             display: flex;
             align-items: center;
             justify-content: center;
             line-height: 1;
+            letter-spacing: 0;
         }
 
         .admin-btn:hover {
-            background: #1e293b;
-            transform: scale(1.06);
+            background: #1a3355;
+            transform: scale(1.06) rotate(90deg);
+            box-shadow: 0 12px 36px rgba(11, 26, 51, 0.4);
         }
 
-        /* Panel administrador */
+        /* Panel admin */
         .admin-panel {
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%) scale(0.95);
             background: white;
-            padding: 36px 32px;
-            border-radius: 32px;
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.3);
+            padding: 40px 36px;
+            border-radius: 36px;
+            box-shadow: 0 50px 100px rgba(0,0,0,0.3);
             z-index: 3000;
             width: 90%;
-            max-width: 500px;
+            max-width: 520px;
             display: none;
-            animation: fadeScale 0.25s ease;
+            opacity: 0;
+            transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.2,0,0,1);
         }
 
         .admin-panel.active {
             display: block;
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
         }
 
         .admin-panel h3 {
-            font-size: 1.6rem;
-            font-weight: 600;
-            margin-bottom: 24px;
-            color: #0f172a;
+            font-size: 1.7rem;
+            font-weight: 700;
+            margin-bottom: 28px;
+            color: #0b1a33;
+            letter-spacing: -0.02em;
         }
 
         .admin-panel label {
             display: block;
-            font-weight: 500;
-            margin: 14px 0 6px;
-            color: #1e293b;
+            font-weight: 600;
+            margin: 16px 0 6px;
+            color: #1a2f4f;
             font-size: 0.9rem;
+            letter-spacing: 0.2px;
+        }
+
+        .admin-panel .file-upload {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 4px;
+        }
+
+        .admin-panel .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .admin-panel .file-upload .custom-file-btn {
+            background: #eef2f7;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: 500;
+            color: #1a2f4f;
+            cursor: pointer;
+            transition: background 0.2s;
+            border: 1px dashed #b3c4d9;
+            font-size: 0.9rem;
+        }
+
+        .admin-panel .file-upload .custom-file-btn:hover {
+            background: #e2eaf5;
+        }
+
+        .admin-panel .file-upload .preview-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: #f0f4fa;
+            border: 1px solid #dce3ed;
+            display: none;
+        }
+
+        .admin-panel .file-upload .preview-img.visible {
+            display: block;
         }
 
         .admin-panel input,
         .admin-panel textarea {
             width: 100%;
-            padding: 12px 16px;
+            padding: 14px 18px;
             border: 1.5px solid #e2e8f0;
-            border-radius: 14px;
+            border-radius: 16px;
             font-size: 1rem;
             transition: border 0.2s, box-shadow 0.2s;
-            background: #f8fafc;
+            background: #fafcff;
+            font-family: inherit;
         }
 
         .admin-panel input:focus,
         .admin-panel textarea:focus {
             outline: none;
-            border-color: #2563eb;
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+            border-color: #1e3a6b;
+            box-shadow: 0 0 0 4px rgba(30, 58, 107, 0.08);
             background: white;
         }
 
@@ -470,30 +578,32 @@
         }
 
         .admin-panel .btn-submit {
-            margin-top: 24px;
-            background: #0f172a;
+            margin-top: 28px;
+            background: #0b1a33;
             color: white;
             border: none;
             padding: 16px;
-            border-radius: 40px;
+            border-radius: 60px;
             font-size: 1rem;
             font-weight: 600;
             width: 100%;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.25s, transform 0.15s;
+            letter-spacing: 0.3px;
         }
 
         .admin-panel .btn-submit:hover {
-            background: #1e293b;
+            background: #1a3355;
+            transform: scale(1.01);
         }
 
         .admin-panel .btn-cancel {
             margin-top: 12px;
             background: transparent;
-            color: #64748b;
+            color: #5b6f8c;
             border: 1.5px solid #e2e8f0;
             padding: 14px;
-            border-radius: 40px;
+            border-radius: 60px;
             font-size: 0.95rem;
             width: 100%;
             cursor: pointer;
@@ -504,37 +614,24 @@
             background: #f1f5f9;
         }
 
-        /* Estado de carga */
+        /* Loading placeholder */
         .loading-placeholder {
             text-align: center;
             padding: 60px 20px;
-            color: #94a3b8;
+            color: #7a8aa3;
             font-size: 1.1rem;
+            font-weight: 500;
         }
 
         /* Responsive */
-        @media (max-width: 600px) {
-            .modal-content {
-                padding: 24px 16px;
-            }
-            .admin-panel {
-                padding: 24px 16px;
-            }
-            .compra-card {
-                height: 90vh;
-                max-height: none;
-                border-radius: 20px;
-            }
-            .compra-header .brand {
-                font-size: 1rem;
-            }
-            .admin-btn {
-                width: 48px;
-                height: 48px;
-                font-size: 24px;
-                bottom: 20px;
-                right: 20px;
-            }
+        @media (max-width: 640px) {
+            body { padding: 16px; }
+            .header h1 { font-size: 2rem; }
+            .modal-content { padding: 24px 18px; }
+            .admin-panel { padding: 28px 18px; }
+            .compra-card { height: 90vh; max-height: none; border-radius: 20px; }
+            .compra-header { flex-wrap: wrap; gap: 8px; }
+            .admin-btn { width: 54px; height: 54px; font-size: 26px; bottom: 20px; right: 20px; }
         }
     </style>
 </head>
@@ -543,8 +640,8 @@
     <div id="app">
         <div class="header">
             <div>
-                <h1>🛍️ Mi Tienda</h1>
-                <div class="sub">Productos seleccionados</div>
+                <h1>✨ Tienda <span>Premium</span></h1>
+                <div class="sub">Productos exclusivos con estilo</div>
             </div>
         </div>
         <div id="dashboard" class="dashboard">
@@ -552,8 +649,8 @@
         </div>
     </div>
 
-    <!-- Botón administrador (x) -->
-    <button class="admin-btn" id="adminBtn" title="Administrar productos">✕</button>
+    <!-- Botón admin -->
+    <button class="admin-btn" id="adminBtn" title="Administrar">✕</button>
 
     <!-- Modal detalle -->
     <div class="modal-overlay" id="detailModal">
@@ -563,24 +660,24 @@
             <img class="detail-image" id="detailImage" src="" alt="producto" />
             <div class="price" id="detailPrice">$0.00</div>
             <div class="payment-methods" id="detailPayment"><strong>Métodos de pago:</strong> Efectivo, tarjeta</div>
-            <div class="description" id="detailDesc">Descripción del producto.</div>
+            <div class="description" id="detailDesc">Descripción.</div>
             <div class="modal-actions">
                 <button class="btn-comprar" id="comprarBtn">
                     <span class="btn-text">Comprar ahora</span>
                     <span class="spinner"></span>
                 </button>
-                <button class="btn-eliminar" id="eliminarBtn">🗑️ Eliminar producto</button>
+                <button class="btn-eliminar" id="eliminarBtn">🗑️ Eliminar</button>
             </div>
         </div>
     </div>
 
-    <!-- Overlay compra con cabecera y iframe -->
+    <!-- Overlay compra -->
     <div class="compra-overlay" id="compraOverlay">
         <div class="compra-card">
             <div class="compra-header">
                 <div class="brand">
                     🛒 ibuyproducts
-                    <span>compra</span>
+                    <span class="badge">compra</span>
                 </div>
                 <button class="close-compra" id="closeCompra">✕ Cerrar</button>
             </div>
@@ -591,14 +688,18 @@
         </div>
     </div>
 
-    <!-- Panel administrador -->
+    <!-- Panel admin -->
     <div class="admin-panel" id="adminPanel">
-        <h3>➕ Publicar nuevo producto</h3>
+        <h3>➕ Nuevo producto</h3>
         <label for="prodTitle">Título *</label>
         <input type="text" id="prodTitle" placeholder="Ej. Zapatos deportivos" />
 
-        <label for="prodImage">URL de la imagen *</label>
-        <input type="url" id="prodImage" placeholder="https://ejemplo.com/imagen.jpg" />
+        <label>Imagen *</label>
+        <div class="file-upload">
+            <label class="custom-file-btn" for="fileInput">📁 Seleccionar imagen</label>
+            <input type="file" id="fileInput" accept="image/*" />
+            <img class="preview-img" id="previewImg" alt="preview" />
+        </div>
 
         <label for="prodPrice">Precio *</label>
         <input type="text" id="prodPrice" placeholder="$99.99" />
@@ -615,9 +716,8 @@
 
     <script type="module">
         import { initializeApp } from "firebase/app";
-        import { getDatabase, ref, onValue, push, set, remove } from "firebase/database";
+        import { getDatabase, ref, onValue, push, remove } from "firebase/database";
 
-        // Configuración Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyD13N4-9MjTrmlPwGP7mves0Exje4v2ACw",
             authDomain: "kahoot-8529e.firebaseapp.com",
@@ -633,7 +733,7 @@
         const db = getDatabase(app);
         const productosRef = ref(db, 'productos');
 
-        // Elementos DOM
+        // DOM elements
         const dashboard = document.getElementById('dashboard');
         const detailModal = document.getElementById('detailModal');
         const closeDetail = document.getElementById('closeDetail');
@@ -644,26 +744,57 @@
         const detailDesc = document.getElementById('detailDesc');
         const comprarBtn = document.getElementById('comprarBtn');
         const eliminarBtn = document.getElementById('eliminarBtn');
-
         const compraOverlay = document.getElementById('compraOverlay');
         const compraIframe = document.getElementById('compraIframe');
         const closeCompra = document.getElementById('closeCompra');
-
         const adminBtn = document.getElementById('adminBtn');
         const adminPanel = document.getElementById('adminPanel');
         const cancelAdmin = document.getElementById('cancelAdmin');
         const submitProduct = document.getElementById('submitProduct');
-
         const prodTitle = document.getElementById('prodTitle');
-        const prodImage = document.getElementById('prodImage');
         const prodPrice = document.getElementById('prodPrice');
         const prodPayment = document.getElementById('prodPayment');
         const prodDesc = document.getElementById('prodDesc');
+        const fileInput = document.getElementById('fileInput');
+        const previewImg = document.getElementById('previewImg');
 
-        // Estado
         let productos = [];
         let selectedProductId = null;
-        let isOwner = false; // se activa tras contraseña correcta
+        let isOwner = false;
+        let imagenBase64 = '';
+
+        // --- Helper: comprimir imagen a base64 (máx 300px ancho) ---
+        function comprimirImagen(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const maxWidth = 400;
+                        const scale = Math.min(1, maxWidth / img.width);
+                        canvas.width = img.width * scale;
+                        canvas.height = img.height * scale;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                        resolve(dataUrl);
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // --- Previsualizar imagen seleccionada ---
+        fileInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const base64 = await comprimirImagen(file);
+            imagenBase64 = base64;
+            previewImg.src = base64;
+            previewImg.classList.add('visible');
+        });
 
         // --- Cargar productos ---
         function cargarProductos() {
@@ -678,17 +809,15 @@
             });
         }
 
-        // --- Renderizar dashboard ---
         function renderDashboard() {
             if (productos.length === 0) {
                 dashboard.innerHTML = `<div class="loading-placeholder">No hay productos disponibles.</div>`;
                 return;
             }
-
             dashboard.innerHTML = productos.map(prod => `
                 <div class="product-card" data-id="${prod.id}">
                     <div class="img-wrap">
-                        <img src="${prod.imagen || 'https://via.placeholder.com/300x200?text=Sin+imagen'}" alt="${prod.titulo}" loading="lazy" />
+                        <img src="${prod.imagen || 'https://via.placeholder.com/400x300?text=Sin+imagen'}" alt="${prod.titulo}" loading="lazy" />
                     </div>
                     <div class="title">${prod.titulo}</div>
                 </div>
@@ -703,31 +832,26 @@
             });
         }
 
-        // --- Abrir detalle ---
         function abrirDetalle(prod) {
             selectedProductId = prod.id;
             detailTitle.textContent = prod.titulo;
-            detailImage.src = prod.imagen || 'https://via.placeholder.com/500x240?text=Sin+imagen';
+            detailImage.src = prod.imagen || 'https://via.placeholder.com/500x300?text=Sin+imagen';
             detailImage.alt = prod.titulo;
             detailPrice.textContent = prod.precio || 'Precio no especificado';
             detailPayment.innerHTML = `<strong>Métodos de pago:</strong> ${prod.metodosPago || 'No especificados'}`;
             detailDesc.textContent = prod.descripcion || 'Sin descripción.';
 
-            // Mostrar botón eliminar solo si Owner
             if (isOwner) {
                 eliminarBtn.classList.add('visible');
             } else {
                 eliminarBtn.classList.remove('visible');
             }
 
-            // Resetear botón comprar
             comprarBtn.classList.remove('loading');
             comprarBtn.querySelector('.btn-text').textContent = 'Comprar ahora';
-
             detailModal.classList.add('active');
         }
 
-        // --- Cerrar detalle ---
         function cerrarDetalle() {
             detailModal.classList.remove('active');
             comprarBtn.classList.remove('loading');
@@ -738,16 +862,14 @@
             if (e.target === detailModal) cerrarDetalle();
         });
 
-        // --- Comprar ahora ---
+        // --- Comprar ---
         comprarBtn.addEventListener('click', () => {
             if (comprarBtn.classList.contains('loading')) return;
-
             comprarBtn.classList.add('loading');
             comprarBtn.querySelector('.btn-text').textContent = 'Pensando...';
 
             setTimeout(() => {
                 cerrarDetalle();
-                // Mostrar overlay de compra con iframe
                 compraIframe.src = 'https://ibuyproducts.vercel.app';
                 compraOverlay.classList.add('active');
                 comprarBtn.classList.remove('loading');
@@ -755,45 +877,41 @@
             }, 5000);
         });
 
-        // --- Cerrar compra overlay ---
         closeCompra.addEventListener('click', () => {
             compraOverlay.classList.remove('active');
             compraIframe.src = 'about:blank';
         });
 
-        // --- Eliminar producto (solo Owner) ---
+        // --- Eliminar ---
         eliminarBtn.addEventListener('click', () => {
-            if (!selectedProductId) return;
-            if (!isOwner) return;
-
-            const confirmar = confirm(`¿Estás seguro de eliminar "${detailTitle.textContent}"?`);
+            if (!selectedProductId || !isOwner) return;
+            const confirmar = confirm(`¿Eliminar "${detailTitle.textContent}"?`);
             if (!confirmar) return;
-
             const prodRef = ref(db, `productos/${selectedProductId}`);
             remove(prodRef)
                 .then(() => {
-                    alert('Producto eliminado correctamente.');
+                    alert('Producto eliminado.');
                     cerrarDetalle();
                 })
-                .catch((error) => {
-                    console.error(error);
-                    alert('Error al eliminar el producto.');
-                });
+                .catch(() => alert('Error al eliminar.'));
         });
 
-        // --- Administrador (contraseña) ---
+        // --- Admin ---
         adminBtn.addEventListener('click', () => {
-            const password = prompt('🔐 Ingresa la contraseña de administrador:');
+            const password = prompt('🔐 Contraseña de administrador:');
             if (password === 'Owner') {
                 isOwner = true;
                 adminPanel.classList.add('active');
-                // Limpiar campos
+                // Resetear campos
                 prodTitle.value = '';
-                prodImage.value = '';
                 prodPrice.value = '';
                 prodPayment.value = '';
                 prodDesc.value = '';
-                // Si hay un detalle abierto, actualizar visibilidad de eliminar
+                fileInput.value = '';
+                imagenBase64 = '';
+                previewImg.classList.remove('visible');
+                previewImg.src = '';
+                // Actualizar botón eliminar si hay detalle abierto
                 if (detailModal.classList.contains('active') && selectedProductId) {
                     const prod = productos.find(p => p.id === selectedProductId);
                     if (prod) abrirDetalle(prod);
@@ -803,46 +921,37 @@
             }
         });
 
-        // --- Cancelar admin ---
         cancelAdmin.addEventListener('click', () => {
             adminPanel.classList.remove('active');
         });
 
-        // --- Publicar producto ---
+        // --- Publicar ---
         submitProduct.addEventListener('click', async () => {
             const titulo = prodTitle.value.trim();
-            const imagen = prodImage.value.trim();
             const precio = prodPrice.value.trim();
             const metodosPago = prodPayment.value.trim();
             const descripcion = prodDesc.value.trim();
 
-            if (!titulo || !imagen || !precio || !metodosPago || !descripcion) {
-                alert('Todos los campos son obligatorios.');
+            if (!titulo || !precio || !metodosPago || !descripcion || !imagenBase64) {
+                alert('Todos los campos y la imagen son obligatorios.');
                 return;
             }
 
-            try {
-                new URL(imagen);
-            } catch (_) {
-                alert('La URL de la imagen no es válida.');
-                return;
-            }
-
-            const nuevoProducto = {
+            const nuevo = {
                 titulo,
-                imagen,
+                imagen: imagenBase64,
                 precio,
                 metodosPago,
                 descripcion
             };
 
             try {
-                await push(productosRef, nuevoProducto);
-                alert('✅ Producto publicado correctamente.');
+                await push(productosRef, nuevo);
+                alert('✅ Producto publicado.');
                 adminPanel.classList.remove('active');
             } catch (error) {
                 console.error(error);
-                alert('Error al publicar el producto.');
+                alert('Error al publicar.');
             }
         });
 
