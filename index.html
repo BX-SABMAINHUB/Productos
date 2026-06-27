@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tienda Elegante</title>
+    <title>Stocks</title>
     <script type="importmap">
         {
             "imports": {
@@ -14,7 +14,7 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -23,11 +23,13 @@
         }
 
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            background: #f6f9fc;
+            font-family: 'Inter', system-ui, sans-serif;
+            background: #f5f8fe;
             min-height: 100vh;
-            padding: 30px 20px;
+            padding: 0 20px 40px;
             color: #0b1a33;
+            background-image: radial-gradient(circle at 10% 20%, rgba(30, 58, 107, 0.02) 0%, transparent 60%),
+                              radial-gradient(circle at 90% 80%, rgba(30, 58, 107, 0.02) 0%, transparent 60%);
         }
 
         #app {
@@ -35,65 +37,120 @@
             margin: 0 auto;
         }
 
-        /* Header */
+        /* HEADER - más decorado */
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-bottom: 40px;
-            flex-wrap: wrap;
-            gap: 16px;
+            text-align: center;
+            padding: 40px 0 30px;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #1e3a6b, #7a9bcb);
+            border-radius: 4px;
         }
 
         .header h1 {
-            font-size: 2.6rem;
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            background: linear-gradient(135deg, #0b1a33, #2c3e6b);
+            font-size: 3.8rem;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            background: linear-gradient(145deg, #0b1a33, #2c4a7a);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .header h1 span {
-            background: #eef2f7;
-            padding: 4px 14px;
-            border-radius: 40px;
-            font-size: 0.8rem;
+            background: #1e3a6b;
+            padding: 4px 18px;
+            border-radius: 60px;
+            font-size: 1rem;
             font-weight: 600;
-            color: #2c3e6b;
-            -webkit-text-fill-color: #2c3e6b;
-            letter-spacing: 0.3px;
+            color: white;
+            -webkit-text-fill-color: white;
+            letter-spacing: 0.4px;
+            box-shadow: 0 4px 12px rgba(30, 58, 107, 0.2);
         }
 
         .header .sub {
-            color: #5b6f8c;
+            color: #4a6080;
             font-weight: 500;
-            font-size: 1rem;
-            margin-top: 4px;
+            font-size: 1.15rem;
+            margin-top: 10px;
+            letter-spacing: 0.2px;
         }
 
-        /* Dashboard grid */
+        /* BARRA DE BÚSQUEDA - centrada y elegante */
+        .search-wrapper {
+            max-width: 580px;
+            margin: 30px auto 40px;
+            position: relative;
+        }
+
+        .search-wrapper .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7a8aa3;
+            font-size: 1.2rem;
+            pointer-events: none;
+        }
+
+        .search-wrapper input {
+            width: 100%;
+            padding: 18px 20px 18px 60px;
+            border: none;
+            border-radius: 60px;
+            font-size: 1.05rem;
+            font-family: inherit;
+            background: white;
+            box-shadow: 0 8px 30px rgba(0, 20, 40, 0.06), 0 2px 8px rgba(0, 0, 0, 0.02);
+            transition: box-shadow 0.3s ease, transform 0.2s;
+            color: #0b1a33;
+            border: 1px solid rgba(226, 232, 240, 0.6);
+        }
+
+        .search-wrapper input:focus {
+            outline: none;
+            box-shadow: 0 12px 40px rgba(30, 58, 107, 0.1), 0 2px 8px rgba(0, 0, 0, 0.02);
+            transform: scale(1.01);
+            border-color: #1e3a6b;
+        }
+
+        .search-wrapper input::placeholder {
+            color: #a0b3cc;
+            font-weight: 400;
+        }
+
+        /* DASHBOARD */
         .dashboard {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 32px;
+            margin-top: 10px;
         }
 
         .product-card {
             background: #ffffff;
-            border-radius: 24px;
+            border-radius: 28px;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 20, 40, 0.04), 0 2px 6px rgba(0, 0, 0, 0.02);
+            box-shadow: 0 4px 24px rgba(0, 20, 40, 0.04), 0 2px 6px rgba(0, 0, 0, 0.02);
             cursor: pointer;
-            transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.4s ease;
+            transition: transform 0.35s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.4s ease, border-color 0.3s;
             border: 1px solid rgba(226, 232, 240, 0.5);
             opacity: 0;
-            transform: translateY(20px);
-            animation: fadeUp 0.5s ease forwards;
+            transform: translateY(30px);
+            animation: fadeUp 0.6s ease forwards;
         }
 
         .product-card:nth-child(1) { animation-delay: 0.05s; }
@@ -104,6 +161,8 @@
         .product-card:nth-child(6) { animation-delay: 0.30s; }
         .product-card:nth-child(7) { animation-delay: 0.35s; }
         .product-card:nth-child(8) { animation-delay: 0.40s; }
+        .product-card:nth-child(9) { animation-delay: 0.45s; }
+        .product-card:nth-child(10) { animation-delay: 0.50s; }
 
         @keyframes fadeUp {
             to {
@@ -113,14 +172,14 @@
         }
 
         .product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 20, 40, 0.12);
-            border-color: #cbd5e1;
+            transform: translateY(-10px);
+            box-shadow: 0 24px 48px rgba(0, 20, 40, 0.12);
+            border-color: #b9cbdf;
         }
 
         .product-card .img-wrap {
             height: 220px;
-            background: #f0f4fa;
+            background: #f0f5fc;
             overflow: hidden;
             position: relative;
         }
@@ -129,15 +188,15 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s ease;
+            transition: transform 0.6s ease;
         }
 
         .product-card:hover .img-wrap img {
-            transform: scale(1.04);
+            transform: scale(1.06);
         }
 
         .product-card .title {
-            padding: 20px 16px 22px;
+            padding: 22px 16px 24px;
             font-weight: 600;
             font-size: 1.05rem;
             text-align: center;
@@ -146,7 +205,7 @@
             letter-spacing: -0.01em;
         }
 
-        /* Modal detalle */
+        /* MODAL (sin cambios, se mantiene elegante) */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -160,22 +219,16 @@
             animation: fadeIn 0.3s ease;
         }
 
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+        .modal-overlay.active { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .modal-content {
             background: white;
-            border-radius: 32px;
+            border-radius: 36px;
             max-width: 540px;
             width: 100%;
             padding: 36px 32px 32px;
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 50px 100px rgba(0,0,0,0.25);
             position: relative;
             animation: slideUp 0.35s cubic-bezier(0.2, 0, 0, 1);
             max-height: 90vh;
@@ -183,14 +236,8 @@
         }
 
         @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: scale(0.96) translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
+            from { opacity: 0; transform: scale(0.96) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         .modal-content .close-btn {
@@ -223,9 +270,9 @@
             width: 100%;
             max-height: 260px;
             object-fit: cover;
-            border-radius: 18px;
+            border-radius: 20px;
             margin: 16px 0 20px;
-            background: #f0f4fa;
+            background: #f0f5fc;
             box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
 
@@ -290,10 +337,7 @@
             background: #14315a;
             box-shadow: 0 8px 24px rgba(30, 58, 107, 0.25);
         }
-
-        .btn-comprar:active {
-            transform: scale(0.97);
-        }
+        .btn-comprar:active { transform: scale(0.97); }
 
         .btn-comprar .spinner {
             display: none;
@@ -305,16 +349,10 @@
             animation: spin 0.8s linear infinite;
         }
 
-        .btn-comprar.loading .spinner {
-            display: inline-block;
-        }
-        .btn-comprar.loading .btn-text {
-            display: none;
-        }
+        .btn-comprar.loading .spinner { display: inline-block; }
+        .btn-comprar.loading .btn-text { display: none; }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         .btn-eliminar {
             background: #e74c5e;
@@ -333,14 +371,10 @@
             gap: 8px;
         }
 
-        .btn-eliminar:hover {
-            background: #c03947;
-        }
-        .btn-eliminar.visible {
-            display: flex;
-        }
+        .btn-eliminar:hover { background: #c03947; }
+        .btn-eliminar.visible { display: flex; }
 
-        /* Overlay compra */
+        /* Overlay compra (igual que antes) */
         .compra-overlay {
             position: fixed;
             inset: 0;
@@ -354,9 +388,7 @@
             animation: fadeIn 0.3s ease;
         }
 
-        .compra-overlay.active {
-            display: flex;
-        }
+        .compra-overlay.active { display: flex; }
 
         .compra-card {
             background: white;
@@ -412,9 +444,7 @@
             font-weight: 500;
         }
 
-        .compra-header .close-compra:hover {
-            background: rgba(255,255,255,0.2);
-        }
+        .compra-header .close-compra:hover { background: rgba(255,255,255,0.2); }
 
         .compra-body {
             flex: 1;
@@ -440,7 +470,7 @@
             letter-spacing: 0.2px;
         }
 
-        /* Botón admin (x) */
+        /* Admin button */
         .admin-btn {
             position: fixed;
             bottom: 30px;
@@ -470,7 +500,7 @@
             box-shadow: 0 12px 36px rgba(11, 26, 51, 0.4);
         }
 
-        /* Panel admin */
+        /* Admin panel */
         .admin-panel {
             position: fixed;
             top: 50%;
@@ -518,9 +548,7 @@
             margin-top: 4px;
         }
 
-        .admin-panel .file-upload input[type="file"] {
-            display: none;
-        }
+        .admin-panel .file-upload input[type="file"] { display: none; }
 
         .admin-panel .file-upload .custom-file-btn {
             background: #eef2f7;
@@ -534,9 +562,7 @@
             font-size: 0.9rem;
         }
 
-        .admin-panel .file-upload .custom-file-btn:hover {
-            background: #e2eaf5;
-        }
+        .admin-panel .file-upload .custom-file-btn:hover { background: #e2eaf5; }
 
         .admin-panel .file-upload .preview-img {
             width: 60px;
@@ -548,9 +574,7 @@
             display: none;
         }
 
-        .admin-panel .file-upload .preview-img.visible {
-            display: block;
-        }
+        .admin-panel .file-upload .preview-img.visible { display: block; }
 
         .admin-panel input,
         .admin-panel textarea {
@@ -572,10 +596,7 @@
             background: white;
         }
 
-        .admin-panel textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
+        .admin-panel textarea { resize: vertical; min-height: 80px; }
 
         .admin-panel .btn-submit {
             margin-top: 28px;
@@ -610,11 +631,8 @@
             transition: background 0.2s;
         }
 
-        .admin-panel .btn-cancel:hover {
-            background: #f1f5f9;
-        }
+        .admin-panel .btn-cancel:hover { background: #f1f5f9; }
 
-        /* Loading placeholder */
         .loading-placeholder {
             text-align: center;
             padding: 60px 20px;
@@ -623,10 +641,22 @@
             font-weight: 500;
         }
 
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #7a8aa3;
+            font-size: 1.1rem;
+            font-weight: 500;
+            grid-column: 1 / -1;
+        }
+
         /* Responsive */
         @media (max-width: 640px) {
-            body { padding: 16px; }
-            .header h1 { font-size: 2rem; }
+            body { padding: 0 12px 30px; }
+            .header h1 { font-size: 2.6rem; }
+            .header h1 span { font-size: 0.8rem; padding: 2px 14px; }
+            .search-wrapper { margin: 20px auto 30px; }
+            .search-wrapper input { padding: 16px 16px 16px 50px; font-size: 1rem; }
             .modal-content { padding: 24px 18px; }
             .admin-panel { padding: 28px 18px; }
             .compra-card { height: 90vh; max-height: none; border-radius: 20px; }
@@ -638,18 +668,24 @@
 <body>
 
     <div id="app">
+        <!-- HEADER mejorado -->
         <div class="header">
-            <div>
-                <h1>✨ Tienda <span>Premium</span></h1>
-                <div class="sub">Productos exclusivos con estilo</div>
-            </div>
+            <h1>📊 Stocks <span>Premium</span></h1>
+            <div class="sub">Descubre productos exclusivos con estilo y calidad</div>
         </div>
+
+        <!-- Barra de búsqueda centrada -->
+        <div class="search-wrapper">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="Buscar productos por nombre..." autocomplete="off" />
+        </div>
+
         <div id="dashboard" class="dashboard">
             <div class="loading-placeholder">Cargando productos...</div>
         </div>
     </div>
 
-    <!-- Botón admin -->
+    <!-- Admin button -->
     <button class="admin-btn" id="adminBtn" title="Administrar">✕</button>
 
     <!-- Modal detalle -->
@@ -733,8 +769,9 @@
         const db = getDatabase(app);
         const productosRef = ref(db, 'productos');
 
-        // DOM elements
+        // DOM
         const dashboard = document.getElementById('dashboard');
+        const searchInput = document.getElementById('searchInput');
         const detailModal = document.getElementById('detailModal');
         const closeDetail = document.getElementById('closeDetail');
         const detailTitle = document.getElementById('detailTitle');
@@ -759,11 +796,12 @@
         const previewImg = document.getElementById('previewImg');
 
         let productos = [];
+        let filteredProductos = [];
         let selectedProductId = null;
         let isOwner = false;
         let imagenBase64 = '';
 
-        // --- Helper: comprimir imagen a base64 (máx 300px ancho) ---
+        // Comprimir imagen
         function comprimirImagen(file) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
@@ -786,7 +824,7 @@
             });
         }
 
-        // --- Previsualizar imagen seleccionada ---
+        // Previsualizar
         fileInput.addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (!file) return;
@@ -796,7 +834,7 @@
             previewImg.classList.add('visible');
         });
 
-        // --- Cargar productos ---
+        // Cargar productos
         function cargarProductos() {
             onValue(productosRef, (snapshot) => {
                 const data = snapshot.val();
@@ -805,16 +843,29 @@
                 } else {
                     productos = [];
                 }
-                renderDashboard();
+                aplicarFiltro();
             });
         }
 
-        function renderDashboard() {
-            if (productos.length === 0) {
-                dashboard.innerHTML = `<div class="loading-placeholder">No hay productos disponibles.</div>`;
+        function aplicarFiltro() {
+            const term = searchInput.value.trim().toLowerCase();
+            if (term === '') {
+                filteredProductos = [...productos];
+            } else {
+                filteredProductos = productos.filter(p =>
+                    p.titulo.toLowerCase().includes(term)
+                );
+            }
+            renderDashboard(filteredProductos);
+        }
+
+        function renderDashboard(lista) {
+            if (lista.length === 0) {
+                dashboard.innerHTML = `<div class="no-results">${productos.length === 0 ? 'No hay productos disponibles.' : 'No se encontraron productos.'}</div>`;
                 return;
             }
-            dashboard.innerHTML = productos.map(prod => `
+
+            dashboard.innerHTML = lista.map(prod => `
                 <div class="product-card" data-id="${prod.id}">
                     <div class="img-wrap">
                         <img src="${prod.imagen || 'https://via.placeholder.com/400x300?text=Sin+imagen'}" alt="${prod.titulo}" loading="lazy" />
@@ -862,7 +913,10 @@
             if (e.target === detailModal) cerrarDetalle();
         });
 
-        // --- Comprar ---
+        // Búsqueda en tiempo real
+        searchInput.addEventListener('input', aplicarFiltro);
+
+        // Comprar
         comprarBtn.addEventListener('click', () => {
             if (comprarBtn.classList.contains('loading')) return;
             comprarBtn.classList.add('loading');
@@ -882,7 +936,7 @@
             compraIframe.src = 'about:blank';
         });
 
-        // --- Eliminar ---
+        // Eliminar
         eliminarBtn.addEventListener('click', () => {
             if (!selectedProductId || !isOwner) return;
             const confirmar = confirm(`¿Eliminar "${detailTitle.textContent}"?`);
@@ -896,13 +950,12 @@
                 .catch(() => alert('Error al eliminar.'));
         });
 
-        // --- Admin ---
+        // Admin
         adminBtn.addEventListener('click', () => {
             const password = prompt('🔐 Contraseña de administrador:');
             if (password === 'Owner') {
                 isOwner = true;
                 adminPanel.classList.add('active');
-                // Resetear campos
                 prodTitle.value = '';
                 prodPrice.value = '';
                 prodPayment.value = '';
@@ -911,7 +964,6 @@
                 imagenBase64 = '';
                 previewImg.classList.remove('visible');
                 previewImg.src = '';
-                // Actualizar botón eliminar si hay detalle abierto
                 if (detailModal.classList.contains('active') && selectedProductId) {
                     const prod = productos.find(p => p.id === selectedProductId);
                     if (prod) abrirDetalle(prod);
@@ -925,7 +977,7 @@
             adminPanel.classList.remove('active');
         });
 
-        // --- Publicar ---
+        // Publicar
         submitProduct.addEventListener('click', async () => {
             const titulo = prodTitle.value.trim();
             const precio = prodPrice.value.trim();
@@ -955,7 +1007,7 @@
             }
         });
 
-        // --- Iniciar ---
+        // Iniciar
         cargarProductos();
     </script>
 </body>
